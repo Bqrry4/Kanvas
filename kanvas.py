@@ -48,6 +48,9 @@ from helper.windowsui import Ui_KanvasMainWindow
 from helper.system_type import SystemTypeManager
 from PySide6.QtGui import QFontDatabase
 
+from pymisp import PyMISP
+import io
+
 class CustomTreeItemDelegate(QStyledItemDelegate):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -1287,8 +1290,22 @@ class MainApp:
             except Exception as e:
                 QMessageBox.critical(json_window, "Error", f"Failed to save file: {str(e)}")
         def push_to_misp():
-            pass
-        
+            misp = PyMISP(
+                "https://192.168.56.107",
+                "l2GOcxnb920iCSc2vLpY3vVEsov6pVO4LPmJcKKn",
+                False
+            )
+            stix_file = io.BytesIO(json_text.toPlainText().encode("utf-8"))
+            
+            response = misp.upload_stix(
+                path=stix_file,
+                version="2"
+            )
+            if response.status_code == 200:
+                QMessageBox.information(json_window, "Success", "Data uploaded")
+            else:
+                QMessageBox.information(json_window, "Error", f"{response.status_code} {response.json()}")
+                    
         copy_button.clicked.connect(copy_to_clipboard)
         save_button.clicked.connect(save_to_file)
         close_button.clicked.connect(json_window.close)
