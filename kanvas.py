@@ -1246,11 +1246,14 @@ class MainApp:
         copy_button.setStyleSheet("background-color: #4CAF50; color: white; padding: 8px;")
         save_button = QPushButton("Save to File")
         save_button.setStyleSheet("background-color: #2196F3; color: white; padding: 8px;")
+        push_button = QPushButton("Push to MISP")
+        push_button.setStyleSheet("background-color: #66023c; color: white; padding: 8px;")
         close_button = QPushButton("Close")
         close_button.setStyleSheet("background-color: #f44336; color: white; padding: 8px;")
         button_layout.addStretch()
         button_layout.addWidget(copy_button)
         button_layout.addWidget(save_button)
+        button_layout.addWidget(push_button)
         button_layout.addWidget(close_button)
         button_layout.addStretch()
         main_layout.addLayout(button_layout)
@@ -1283,10 +1286,14 @@ class MainApp:
                     QMessageBox.information(json_window, "Success", f"STIX data saved to:\n{file_path}")
             except Exception as e:
                 QMessageBox.critical(json_window, "Error", f"Failed to save file: {str(e)}")
+        def push_to_misp():
+            pass
         
         copy_button.clicked.connect(copy_to_clipboard)
         save_button.clicked.connect(save_to_file)
         close_button.clicked.connect(json_window.close)
+        push_button.clicked.connect(push_to_misp)
+        
         json_window.show()
         self.track_child_window(json_window)
 
