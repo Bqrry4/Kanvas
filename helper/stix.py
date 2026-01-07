@@ -163,8 +163,11 @@ def convert_indicators_to_stix(excel_file_path: str, sheet_name: str = "Indicato
                 logger.warning(f"Could not generate pattern for row {index}")
                 continue
             stix_indicator_types = map_indicator_type_to_stix_indicator_types(indicator_type)
-            current_time = datetime.utcnow()
-            timestamp = format_stix_timestamp(current_time)
+
+            raw_ts = row.get("Timestamp")
+            dt = datetime.strptime(raw_ts, "%d-%m-%Y %H:%M")
+
+            timestamp = format_stix_timestamp(dt)
             indicator = {
                 "type": "indicator",
                 "spec_version": "2.1",
